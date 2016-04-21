@@ -1,0 +1,40 @@
+Name: Yi Ding
+U-ID: 604588135
+
+README:
+-----------------------------------------------------------------------------------
+There are four files for this lab, and I first list them all and then describe each of them.
+-----------------------------------------------------------------------------------
+List of documents:
+client.c
+server.c
+my.key
+Makefile
+-----------------------------------------------------------------------------------
+Descriptions:
+
+client.c
+The client program is used as following:
+1. ./client --port=XXXX will open a connection to the port number XXXX.
+2. ./client --port=XXXX --log=logfile will open a connection to the port number XXXX and at the same time create a log file to record the byte sent and received.
+3. ./client --port=XXXX --log=logfile --encrypt will open a connection to the port number XXXX in an encryption mode, and all records in the logfile will be the encrypted text.
+
+-----------------------------------------------------------------------------------
+server.c
+The server program is used as following:
+1. ./server --port=XXXX will create a port number XXXX.
+2. ./client --port=XXXX --encrypt will create a port number XXXX in an encryption mode, means all the text received from the socket shoule be devrypted and then send it to shell.
+
+-----------------------------------------------------------------------------------
+my.key
+A private key is included.
+
+-----------------------------------------------------------------------------------
+Makefile:
+make : to compile both client.c and server.c
+make client : to compile only client.c
+make server : to compile only server.c
+make clean : to clean files created by make
+make dist : to build the tarball
+
+-----------------------------------------------------------------------------------

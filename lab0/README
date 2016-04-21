@@ -1,0 +1,38 @@
+README:
+-----------------------------------------------------------------------------------
+There are four files for this lab, and I first list them all and then describe each of them.
+-----------------------------------------------------------------------------------
+LIst of documents:
+lab0.c
+Makefile
+backtrace
+breakpoint
+-----------------------------------------------------------------------------------
+Descriptions:
+lab0.c:
+A single C program that can copy its standard input to its standard output.
+It can set segmentation fault and catch it and exit the program with 3.
+It can also deal with input and output files correctly with exit number 1 and 2.
+When the code catches a segmentation fault, it will print "Segmentation Fault Caught!"
+
+Makefile:
+Build the lab executable and support check, clean and dist.
+	
+For make check, there are 7 quick smoke-tests included in the check, which are:
+Note that the input file is IN and output file is OUT!
+1. test 1: ./lab0 --input=IN --output=OUT (a standard case with right input and output files and no catch nor segfault, will return 0 if successful!)
+2. test 2: ./lab0 --input=IN --output=OUT --segfault --catch (a case with right input and output files and also with segfault and catch, will return 3 if successful!)
+3. test 3: ./lab0 --segfault --catch (a case with segfault and catch but without input and output files, will return 3 if successful!)
+4. test 4: ./lab0 --segfault (a case with segfault but without catch, which means the OS will detect and output the segfault error signal!)
+5. test 5: ./lab0 --input=INFILE --output=OUT (a case with non-existing input file, it will exit 1 if run successfully!)
+6. test 6: ./lab0 --input (a case with no input argument, which will exit 1 and show the error of no argument if successful!)
+7. test 7: ./lab0 --input=IN --output=OUT (in this case I change the mode of output file OUT with 00000, which denies all the permissions, the code will exit 2 if run successfully!)
+
+Finally execute make clean and delete IN and OUT.
+
+backtrace:
+Screen shot showing taking of segfault within gdb and backtrace from segfault.
+
+breakpoint:
+Screen shot showing breakpoint stop before fault and inspection of null pointer
+-----------------------------------------------------------------------------------
