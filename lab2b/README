@@ -1,0 +1,88 @@
+Name: Yi Ding
+U-ID: 604588135
+
+Use of slip day: one slip day! 
+====================================================================================
+README:
+This readme file contains two parts, first I answer the questions and then describe all the file included in this lab.
+====================================================================================
+
+QUESTIONS:
+------------------------------------------------------------------------------------
+General clarity:
+1. lab2b is quite different from lab2a. The cost per operation are much larger. This is because all four functions in linked list is O(n) while add function is O(1). Thus unlike the cost per operation in 2a converge to a small number, it linearly increase finally. So to correctly calculate the cost per operation, we should divide the time further by the number of nodes in the list.
+2. Yield can cause failure more frequently. Note that when we do not add lock, the process will fail almost every time with threads=10 and iterations=20 without yield. However, when I add all three yield, when threads=5 and iterations=5, it will fail almost every time. Thus, we can see that yield can cause problem more frequently. When only add i, d or is, ds, the code may carry out correct answer with less than 10 threads and 10 iterations, after that, it will fail almost every time.
+3. The critical section in 2b is larger than 2a, thus locks are held for longer time, which will cause more blocks, which will lead to overhead of the process.
+
+------------------------------------------------------------------------------------
+QUESTION 2B.1A:
+Explain the variation in time per operation vs the number of iterations? 
+--The cost per operation can be describe as A + B, where A stands for the time to create threads and B stands for linked list functions cost. The cost per operation first goes down as the number of iterations increases because as iteration number increases, A drops very quickly. And then, the cost per operation increases quickly as iteration numbers grows. This is because the complexity of linked list insert, delete, lookup and get length are all O(n), while the first part A will converge to zero. Thus, as number of iterations further increases, the cost per operation will linearly increase. 
+
+------------------------------------------------------------------------------------
+QUESTION 2B.1B:
+How would you propose to correct for this effect? 
+--To correct this and get the truly cost per operation, we should divide the cost computed above by the number of elements in the linked list.
+
+------------------------------------------------------------------------------------
+QUESTION 2B.2A:
+Compare the variation in time per protected operation vs the number of threads in 
+Project 2B and in Project 2A. Explain the difference.
+--First of all, in 2B, the critical section is larger than in 2A. Because in linked list function, all four functions include critical areas while in add function, only add is the critical section.
+--Second, Since critical areas are larger, Lock is held for a longer time compared that in 2A.
+--Probabiliy of conflict is much higher in this lab2B than in 2A, which will lead to more threads to be blocked. Under this case, the code will suffer less parallelism and more overhead.
+
+====================================================================================
+DESCRIPTIONS:
+
+There are 6 files for this lad, which are:
+-SortedList.h
+-SortedList.c
+-lab2b.c
+-Makefile
+-figure_1.png
+-figure_2.png
+
+------------------------------------------------------------------------------------
+SortedList.h
+This is a header file containing interfaces for linked list operations.
+
+------------------------------------------------------------------------------------
+SortedList.c
+This is a source file that implement the functions in SortedListed.h, which includes insert, delete, lookup and get length. Also, all these functions have critical areas and I add corresponding yield options in that areas.
+
+------------------------------------------------------------------------------------
+lab2b.c
+This is the C source code for this lab, it mainly deals with multiple threads and solve race conditions in implementing basic functions of a doublely linked list.
+./lab2b
+This will run with threads=1 and iterations=1 without yield nor lock.
+./lab2b --threads=a --iterations=b
+This will run with threads=a and iterations=b without yield nor lock. Notice that running multiple threads without lock is dangerous and may lead to wield error. Thus without lock, we should only run with thread num equals to 1.
+./lab2b --threads=a --iterations=b --yield=[ids]
+This will run with threads=a and iterations=b with yield but no lock. There are three types of yields, insert yield, delete yield and search yield, denoted as i, d, and s. They can be used in any combination.
+./lab2b --threads=a --iterations=b --yield=[ids] --sync=TYPE
+This will run with threads=a and iterations=b with yield and lock with type TYPE.
+TYPE has three options:
+m -mutex lock
+s -spin lock
+
+The code will exit with 0 if final length of linked list is zero. For other all errors, including final length not equal to zero, the code will all exit with 1.
+
+------------------------------------------------------------------------------------
+Makefile
+A makefile to build the program and the tarball.
+make: build lab2b, and compile SortedList.c.
+make clean: clean the files created by make.
+make dist: make the tarball of the lab.
+
+------------------------------------------------------------------------------------
+figure1.png
+Show the time cost per operation (non-yield) as a function of the number of iterations, with a single thread without lock.
+
+------------------------------------------------------------------------------------
+figure2.png
+Show the corrected time per operation (non-yield) for a range of threads values, and graph the performance (time per operation) of all three versions (unprotected, mutex, spin-lock) vs the number of threads.
+The iteration number used in this figure is 1000.
+
+------------------------------------------------------------------------------------
+
