@@ -1,0 +1,102 @@
+Name: Yi Ding
+U-ID: 604588135
+
+====================================================================================
+README:
+This readme file contains two parts, first I answer the questions and then describe all the file included in this lab.
+====================================================================================
+
+QUESTIONS:
+------------------------------------------------------------------------------------
+General analysis:
+As increase of threads and iterations, there is a high probability that the operation will fail. As iteration increases, the average opertion time will drop. As the threads increase, the average operation cost will increase because of some factors like waiting and context switch. And yield will greatly increase the average cost due to context switch.
+
+------------------------------------------------------------------------------------
+QUESTION 2A.1A:
+Why does it take this many threads or iterations to result in failure?
+--The number of failure goes up when the number of threads or iterations grows. The number of threads influence the failure obviously that when there are more threads, multiple threads are more likely to go into the critical part which will cause a failure. The number of iterations matters because when the number of iterations is small, there will be a low probability for other threads to interrupt the current thread while a large number of iterations will lead to a high probability of interruption.
+
+------------------------------------------------------------------------------------
+QUESTION 2A.1B:
+Why does a significantly smaller number of iterations so seldom fail?
+--This is because when the number of iterations is small, there will be a low probability for other threads to interrupt the current thread, thus, it seldom fail.
+
+------------------------------------------------------------------------------------
+QUESTION 2A.2A:
+Why does the average cost per operation drop with increasing iterations?
+--This is because the time cost to create and join a thread is much larger than the add function. Since add operation costs very short time compared with creating and joining. Thus, with the same number of threads, the total time cost will change very slightly. Thus the average cost per operation drop with increasing iterations.
+
+------------------------------------------------------------------------------------
+QUESTION 2A.2B:
+How do we know what the “correct” cost is?
+--We first define the cost of creating and joining threads per operation as A and the cost of add function per operation as B. Thus the total cost per operation is A+B. To know the correct cost, we should do as much number of iterations as we can. As number of iterations increases, A will converge to zero, and the cost per operation will converge to the "correct" cost.
+
+------------------------------------------------------------------------------------
+QUESTION 2A.2C:
+Why are the --yield runs so much slower?  Where is the extra time going?
+--Code with yield option runs much slower because yield will cause current thread to sleep and let one of other threads to run. This operation needs context switch which is very time consuming.
+
+------------------------------------------------------------------------------------
+QUESTION 2A.2D:
+Can we get valid timings if we are using --yield?  How, or why not?
+--We cannot get valid timings if we are using --yield. This is because yield occur in every iteration, which means the time cost on yielding is the time of yielding per iteration times the number of iterations. Thus, when increasing the number of iterations, this part will still appear, and the final time will converge to the "correct" cost + cost of yielding per iteration.
+
+------------------------------------------------------------------------------------
+QUESTION 2A.3A:
+Why do all of the options perform similarly for low numbers of threads?
+--When the number of threads is small, the probability of other threads interrupting the current thread will be quite small. It is obvious that the performance of lock depends on the number of interruptions. Thus, these options perform similarly for low numbers of threads.
+
+------------------------------------------------------------------------------------
+QUESTION 2A.3B:
+Why do the three protected operations slow down as the number of threads rises?
+--First of all, when threads goes up, there may be more context switch which may slow down the operations. Also, As the number of threads goes up, the probability other threads interrupting will increase, which means locks have to deal with more interruptions and more frequently. This will lead to call some system functions more frequently in mutex lock, or in compare and swap, it will try the operation more times, and in spin lock, it will spin and wait. All of these slow down the operations.
+
+------------------------------------------------------------------------------------
+QUESTION 2A.3C:
+Why are spin-locks so expensive for large numbers of threads?
+--When the number of threads is quite small, let's say, 2 threads, under spin lock, there will be one thread running while another spinning and waiting, using CPU. And when the number of threads goes up, say 30 threads, then there will be one thread running while other 31 threads keep spinning and waiting, using CPU. Thus the time cost in the latter case is almost 15 times that in the former case. That's why spin-locks are so expensive for large numbers of threads.
+
+====================================================================================
+DESCRIPTIONS:
+
+There are 4 files for this lad, which are:
+-lab2a.c
+-Makefile
+-figure1.png
+-figure2.png
+------------------------------------------------------------------------------------
+lab2a.c
+This is the C source code for this lab, it mainly deals with multiple threads and solve race conditions.
+./lab2a
+This will run with threads=1 and iterations=1 without yield nor lock.
+./lab2a --threads=a --iterations=b
+This will run with threads=a and iterations=b without yield nor lock.
+./lab2a --threads=a --iterations=b --yield
+This will run with threads=a and iterations=b with yield but no lock.
+./lab2a --threads=a --iterations=b --yield --sync=TYPE
+This will run with threads=a and iterations=b with yield and lock with type TYPE.
+TYPE has three options:
+m -mutex lock
+s -spin lock
+c -compare and swap lock
+
+The code will exit with 0 if counter number is zero. For other all errors, including counter not equal to zero, the code will all exit with 1.
+
+------------------------------------------------------------------------------------
+Makefile
+A makefiel to build the program and the tarball.
+make: build lab2a.
+make clean: clean the files created by make.
+make dist: make the tarball of the lab.
+
+------------------------------------------------------------------------------------
+figure1.png
+Show the average cost per operation (non-yield) as a function of the number of iterations, with a single thread.
+
+------------------------------------------------------------------------------------
+figure2.png
+Show the average time per operation (non-yield) for a range of threads values, and graph the performance (time per operation) of all four versions (unprotected, mutex, spin-lock, compare-and-swap) vs the number of threads.
+The iteration number used in this figure is 10000.
+
+------------------------------------------------------------------------------------
+
